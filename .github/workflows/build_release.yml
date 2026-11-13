@@ -1,0 +1,203 @@
+#name: "Build & Release"
+#
+#on:
+#  push:
+#    branches: [ main, master ]
+#  pull_request:
+#    branches: [ main, master ]
+#
+#jobs:
+#  setup:
+#    name: Setup Environment
+#    runs-on: macos-latest
+#
+#    steps:
+#      - name: Checkout Repository
+#        uses: actions/checkout@v3
+#
+#      - name: Set up Java (Zulu 17)
+#        uses: actions/setup-java@v3
+#        with:
+#          distribution: 'zulu'
+#          java-version: '17'
+#
+#      - name: Set up Flutter
+#        uses: subosito/flutter-action@v2
+#        with:
+#          channel: 'stable'
+#          architecture: x64
+#
+#      - name: Install Dependencies
+#        run: flutter pub get
+#
+#      - name: Upload Source Code with Deps
+#        uses: actions/upload-artifact@v4
+#        with:
+#          name: source-code
+#          path: |
+#            .packages
+#            .flutter-plugins
+#            .flutter-plugins-dependencies
+#            .dart_tool
+#            pubspec.lock
+#            pubspec.yaml
+#            lib/
+#            android/
+#            ios/
+#            assets/
+#
+#  android-build:
+#    name: Build Android APK
+#    runs-on: macos-latest
+#    needs: setup
+#    continue-on-error: true
+#
+#    steps:
+#      - name: Checkout Repository
+#        uses: actions/checkout@v3
+#
+#      - name: Download Source Code
+#        uses: actions/download-artifact@v4
+#        with:
+#          name: source-code
+#
+#      - name: Set up Flutter
+#        uses: subosito/flutter-action@v2
+#        with:
+#          channel: 'stable'
+#          architecture: x64
+#
+#      - name: Build APK
+#        run: flutter build apk
+#
+#      - name: Upload APK
+#        uses: actions/upload-artifact@v4
+#        with:
+#          name: android-apk
+#          path: build/app/outputs/apk/release/app-release.apk
+#
+#  ios-build:
+#    name: Build iOS IPA
+#    runs-on: macos-latest
+#    needs: setup
+#    continue-on-error: true
+#
+#    steps:
+#      - name: Checkout Repository
+#        uses: actions/checkout@v3
+#
+#      - name: Download Source Code
+#        uses: actions/download-artifact@v4
+#        with:
+#          name: source-code
+#
+#      - name: Set up Flutter
+#        uses: subosito/flutter-action@v2
+#        with:
+#          channel: 'stable'
+#          architecture: x64
+#
+#      - name: Install CocoaPods & Fix Specs
+#        run: |
+#          sudo gem install cocoapods -v 1.14.3
+#          cd ios
+#          pod setup
+#          rm -rf ~/.cocoapods/repos
+#          pod install --repo-update
+#
+#      - name: Build iOS IPA
+#        run: |
+#          flutter build ios --no-codesign
+#          cd build/ios/iphoneos
+#          mkdir Payload
+#          cp -r Runner.app Payload/
+#          zip -r app.ipa Payload
+#
+#      - name: Upload IPA
+#        uses: actions/upload-artifact@v4
+#        with:
+#          name: ios-ipa
+#          path: build/ios/iphoneos/app.ipa
+#
+#      - name: Upload .app file
+#        uses: actions/upload-artifact@v4
+#        with:
+#          name: ios-app
+#          path: build/ios/iphoneos/Runner.app
+#
+#  release:
+#    name: Create GitHub Release
+#    runs-on: macos-latest
+#    needs: [android-build, ios-build]
+#
+#    steps:
+#      - name: Checkout Repository
+#        uses: actions/checkout@v3
+#
+#      - name: Download APK
+#        uses: actions/download-artifact@v4
+#        with:
+#          name: android-apk
+#          path: release-files/
+#
+#      - name: Download IPA
+#        uses: actions/download-artifact@v4
+#        with:
+#          name: ios-ipa
+#          path: release-files/
+#
+#      - name: Download Source
+#        uses: actions/download-artifact@v4
+#        with:
+#          name: source-code
+#          path: source-code/
+#
+#      - name: Create ZIP of Source Code
+#        run: zip -r release-files/source-code.zip source-code/ -x '*.git*' 'build/*'
+#
+#      - name: Create GitHub Release & Upload Artifacts
+#        uses: ncipollo/release-action@v1
+#        with:
+#          tag: v1.0.${{ github.run_number }}
+#          token: ${{ secrets.TOKEN }}
+#          artifacts: |
+#            release-files/app-release.apk
+#            release-files/app.ipa
+#            release-files/source-code.zip
+#
+#      - name: Generate Pre-signed URL for APK and IPA
+#        run: |
+#          # Fetch the Release ID using GitHub API
+#          RELEASE_ID=$(curl -H "Authorization: token ${{ secrets.TOKEN }}" \
+#            "https://api.github.com/repos/${{ github.repository }}/releases/tags/v1.0.${{ github.run_number }}" | jq -r .id)
+#
+#          # Fetch the assets from the release and generate pre-signed URLs for APK and IPA
+#          APK_URL=$(curl -H "Authorization: token ${{ secrets.TOKEN }}" \
+#            "https://api.github.com/repos/${{ github.repository }}/releases/${RELEASE_ID}/assets" | jq -r '.[0].browser_download_url')
+#
+#          IPA_URL=$(curl -H "Authorization: token ${{ secrets.TOKEN }}" \
+#            "https://api.github.com/repos/${{ github.repository }}/releases/${RELEASE_ID}/assets" | jq -r '.[1].browser_download_url')
+#
+#          echo "APK URL: $APK_URL"
+#          echo "IPA URL: $IPA_URL"
+#
+#          # Save the URLs to a file or output them for further use
+#          echo "APK URL: $APK_URL" >> release-files/urls.txt
+#          echo "IPA URL: $IPA_URL" >> release-files/urls.txt
+#
+#      - name: Upload URLs File
+#        uses: actions/upload-artifact@v4
+#        with:
+#          name: release-links
+#          path: release-files/urls.txt
+#
+#
+#
+#
+#
+#
+#
+#
+## push to master, main, develop
+## pull request on main master
+##firoz

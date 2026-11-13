@@ -1,0 +1,32 @@
+{
+  "app_name": "पीसीबी ऐप",
+  "change_language": "भाषा बदलें",
+  "select_language": "भाषा चुने",
+
+  "login": "लॉग इन",
+  "signup": "साइन अप",
+  "mobile_number": "मोबाइल नंबर",
+  "full_name": "पूरा नाम",
+  "send_otp": "ओटीपी भेजें",
+  "verify_otp": "ओटीपी सत्यापित करें",
+  "otp_verification": "ओटीपी सत्यापन",
+  "enter_mobile_to_continue": "जारी रखने के लिए अपना मोबाइल नंबर दर्ज करें",
+  "enter_details_to_signup": "खाता बनाने के लिए अपना विवरण दर्ज करें",
+  "dont_have_account": "खाता नहीं है?",
+  "already_have_account": "पहले से ही एक खाता है?",
+  "we_sent_otp": "हमने आपके मोबाइल नंबर पर ओटीपी भेज दिया है",
+  "didnt_receive_otp": "ओटीपी नहीं मिला?",
+  "resend": "पुनः भेजें",
+
+  "please_enter_name": "कृपया अपना नाम दर्ज करें",
+  "please_enter_mobile": "कृपया अपना मोबाइल नंबर दर्ज करें",
+  "enter_valid_mobile": "कृपया एक वैध 10-अंकों का मोबाइल नंबर दर्ज करें",
+  "please_enter_otp": "कृपया ओटीपी दर्ज करें",
+
+  "otp_sent": "आपके मोबाइल नंबर पर ओटीपी भेज दिया गया है",
+  "otp_verified": "ओटीपी सफलतापूर्वक सत्यापित",
+
+  "home": "होम",
+  "profile": "प्रोफाइल",
+  "logout": "लॉग आउट"
+}

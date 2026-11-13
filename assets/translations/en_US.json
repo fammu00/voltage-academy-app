@@ -1,0 +1,32 @@
+{
+  "app_name": "PCB App",
+  "change_language": "Change Language",
+  "select_language": "Select Language",
+
+  "login": "Login",
+  "signup": "Sign Up",
+  "mobile_number": "Mobile Number",
+  "full_name": "Full Name",
+  "send_otp": "Send OTP",
+  "verify_otp": "Verify OTP",
+  "otp_verification": "OTP Verification",
+  "enter_mobile_to_continue": "Enter your mobile number to continue",
+  "enter_details_to_signup": "Enter your details to create an account",
+  "dont_have_account": "Don't have an account?",
+  "already_have_account": "Already have an account?",
+  "we_sent_otp": "We have sent OTP to your mobile number",
+  "didnt_receive_otp": "Didn't receive OTP?",
+  "resend": "Resend",
+
+  "please_enter_name": "Please enter your name",
+  "please_enter_mobile": "Please enter your mobile number",
+  "enter_valid_mobile": "Please enter a valid 10-digit mobile number",
+  "please_enter_otp": "Please enter OTP",
+
+  "otp_sent": "OTP sent to your mobile number",
+  "otp_verified": "OTP verified successfully",
+
+  "home": "Home",
+  "profile": "Profile",
+  "logout": "Logout"
+}
